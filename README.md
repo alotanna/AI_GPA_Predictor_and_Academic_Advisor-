@@ -27,7 +27,7 @@ Hosting the Application on Streamlit Cloud
 2. Link your GitHub account with Streamlit after signing up.
 3. Click on 'Create New Application' at the top left of the screen.
 4. Select the public repository (link provided below).
-5. Choose the `app.py` file in the section where the application file is required.
+5. Choose the `finalapp.py` file in the section where the application file is required.
 6. Edit the URL as needed, then click on the deploy button to deploy the application.
 Conclusion
 Executing this project involved training various models, with the ANN proving to be the best. All required files have been uploaded to the repository. Below is a link to our YouTube video demonstrating how our platform works:
