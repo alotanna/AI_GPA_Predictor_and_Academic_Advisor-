@@ -31,6 +31,6 @@ Hosting the Application on Streamlit Cloud
 6. Edit the URL as needed, then click on the deploy button to deploy the application.
 Conclusion
 Executing this project involved training various models, with the ANN proving to be the best. All required files have been uploaded to the repository. Below is a link to our YouTube video demonstrating how our platform works:
-[YouTube Video Link](#)
+[[YouTube Video Link(https://youtu.be/IilmEGuVado)](#)
 Repository
 [GitHub Repository Link](#)
