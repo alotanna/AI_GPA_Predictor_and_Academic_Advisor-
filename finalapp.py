@@ -5,7 +5,8 @@ from sklearn.preprocessing import StandardScaler
 import plotly.graph_objects as go
 import tensorflow as tf
 import joblib
-import openai
+import requests
+import json
 import base64
 
 # Load the trained model, scaler, and encoder
@@ -18,15 +19,20 @@ except Exception as e:
     st.stop()
 
 
-# Set your OpenAI API key
-openai.api_key = "sk-proj-nx2fCMkFkbR0UVwlYoCMT3BlbkFJ4eiMK47mcR6PI460gI17"  # Replace with your actual API key
-
 # Streamlit app
 st.set_page_config(page_title="Student GPA Predictor and Advisor", page_icon=":trophy:")
 
-# Function to get advice using OpenAI's GPT-3.5
-def get_advice(predicted_gpa, study_hours, stress_level, time_wasted_on_social_media, previous_gpa,
-               physical_activity, educational_resources, nutrition, sleep_patterns, name):
+# Function to get advice from the Cohere API
+def get_advice_from_cohere(predicted_gpa, study_hours, stress_level, time_wasted_on_social_media, previous_gpa,
+                           physical_activity, educational_resources, nutrition, sleep_patterns, name):
+    cohere_api_key = "aVkQ5DLqf2DUdfgU7dsla4q1TbjGZMinKbbjhRlc"  # Secure your API key
+    cohere_api_url = "https://api.cohere.ai/v1/generate"
+
+    headers = {
+        "Authorization": f"Bearer {cohere_api_key}",
+        "Content-Type": "application/json"
+    }
+
     prompt = f"""
     Based on the following student information for {name}, provide personalized academic advice:
 
@@ -43,16 +49,20 @@ def get_advice(predicted_gpa, study_hours, stress_level, time_wasted_on_social_m
     Please provide specific, actionable advice to help {name} improve their academic performance and overall well-being. You can also tell them where they are going wrong.
     """
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system",
-             "content": "You are an experienced academic advisor, skilled in providing personalized advice to students based on their academic performance and lifestyle factors."},
-            {"role": "user", "content": prompt}
-        ]
-    )
+    payload = {
+        "model": "command-xlarge",
+        "prompt": prompt,
+        "max_tokens": 1000  # Adjust as needed
+    }
 
-    return response.choices[0].message['content']
+    response = requests.post(cohere_api_url, headers=headers, data=json.dumps(payload))
+
+    if response.status_code == 200:
+        result = response.json()
+        return result['generations'][0]['text'].strip()
+    else:
+        return f"Error: {response.status_code} - {response.text}"
+
 
 # Function to add background image
 def add_bg_from_local(image_file):
@@ -244,26 +254,26 @@ def predict_page():
 
         if st.button('Get Advice'):
             if 'predicted_gpa' in st.session_state:
-                # Get advice from OpenAI with all inputs and predicted GPA
-                advice = get_advice(
-                    st.session_state.predicted_gpa,
-                    study_hours,
-                    stress_level,
-                    time_wasted_on_social_media,
-                    previous_gpa,
-                    physical_activity,
-                    educational_resources,
-                    nutrition,
-                    sleep_patterns,
-                    name if name else "the student"
-                )
-                st.write("### Personalized Advice:")
-                st.write(advice)
-            else:
-                st.error("Please predict the GPA first before getting advice.")
+                with st.spinner('Generating advice...'):
+                    advice = get_advice_from_cohere(
+                        predicted_gpa=st.session_state.predicted_gpa,
+                        study_hours=st.session_state.input_data['Study_Hours'],
+                        stress_level=st.session_state.input_data['Stress_Levels'],
+                        time_wasted_on_social_media=st.session_state.input_data['Time_Wasted_on_Social_Media'],
+                        previous_gpa=st.session_state.input_data['Previous GPA'],
+                        physical_activity=st.session_state.input_data['Physical_Activity'],
+                        educational_resources=st.session_state.input_data['Educational_Resources'],
+                        nutrition=st.session_state.input_data['Nutrition'],
+                        sleep_patterns=st.session_state.input_data['Sleep_Patterns'],
+                        name=name
+                    )
 
-        st.markdown('</div>', unsafe_allow_html=True)
+                    st.markdown('<div class="content-container">', unsafe_allow_html=True)
+                    st.markdown('<h2>Personalized Advice</h2>', unsafe_allow_html=True)
+                    st.markdown(f'<p style="font-size: 18px;">{advice}</p>', unsafe_allow_html=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
 
+            st.markdown('</div>', unsafe_allow_html=True)
     # Add a back button to return to the home page
     if st.button('Back to Home'):
         st.session_state.page = 'home'
