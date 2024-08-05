@@ -32,5 +32,3 @@ Hosting the Application on Streamlit Cloud
 Conclusion
 Executing this project involved training various models, with the ANN proving to be the best. All required files have been uploaded to the repository. Below is a link to our YouTube video demonstrating how our platform works:
 [https://youtu.be/IilmEGuVado](#)
-Repository
-[GitHub Repository Link](#)
