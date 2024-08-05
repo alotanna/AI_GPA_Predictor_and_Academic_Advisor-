@@ -9,13 +9,9 @@ import openai
 import base64
 
 # Load the trained model, scaler, and encoder
-try:
-    model = joblib.load('model.pkl')
-    scaler = joblib.load('scaler.pkl')
-    label_encoder = joblib.load('encoder.pkl')
-except Exception as e:
-    st.error(f"Error loading model, scaler, or encoder: {str(e)}")
-    st.stop()
+model = joblib.load('model.pkl')
+scaler = joblib.load('scaler.pkl')
+label_encoder = joblib.load('encoder.pkl')
 
 # Set your OpenAI API key
 openai.api_key = "sk-proj-nx2fCMkFkbR0UVwlYoCMT3BlbkFJ4eiMK47mcR6PI460gI17"  # Replace with your actual API key
