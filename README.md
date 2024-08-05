@@ -10,7 +10,7 @@ This project aims to create a web application that enables individuals in the ac
 - Sleep Patterns
 - Time Wasted on Social Media
 Methodology
-Our approach involves training an artificial neural network (ANN) with relevant data to predict GPA values. These predicted values are then passed to a pre-trained OpenAI GPT-3.5 language model to provide personalized advice based on the relevant features that influenced the GPA prediction. The advice is displayed in the following format:
+Our approach involves training an artificial neural network (ANN) with relevant data to predict GPA values. These predicted values are then passed to a pre-trained Open-source "Cohere" language model(Command-Xlarge API) to provide personalized advice based on the relevant features influencing the GPA prediction. The advice is displayed in the following format:
 General Impression
 "Based on the information provided, it seems..."
 Academic Performance
